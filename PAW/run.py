@@ -1,40 +1,41 @@
+"""AI is creating summary for 
+
+Returns:
+    [type]: [If you want to dynamically generate route 
+            wrapper functions in the main_file.py based 
+            on the functions defined in views.py, you can 
+            use a decorator or a loop to iterate through 
+            the functions in views.py and create corresponding 
+            wrappers in main_file.py. Here's an example using 
+            a decorator:]
+            
+            # # Parse form data
+            # form_data = parse_qs(post_data)
+            # input_value = form_data.get('input_name', [''])[0]
+"""
+
+
+
+
+
 from PAW.server import MyFrameworkServer
-from PAW.router import Router
-from urllib.parse import parse_qs
-from PAW.utils import Utils
+from example.views import *
 
-from PAW.database import Database
+# Define a decorator for generating route wrapper functions
+def generate_route_wrapper(route_func):
+    def wrapper(request):
+        return route_func(request)
+    return wrapper
 
-# Create a database instance
-db = Database()
-@Router.route('/', methods=['GET', 'POST'])
-def home(request):
-    if request.command == 'GET':
-        html_content = Utils.read_html_file('temp/home.html')
-        return html_content, 200
-    elif request.command == 'POST':
-        content_length = int(request.headers['Content-Length'])
-        post_data = request.rfile.read(content_length).decode('utf-8')
+# Iterate through functions in views.py and generate corresponding wrappers
+for func_name in dir():
+    if func_name.startswith("_"):
+        continue
 
-        # Parse form data
-        form_data = parse_qs(post_data)
-        input_value = form_data.get('input_name', [''])[0]
-        
-        # Insert data into the database
-        db.insert_data(input_value)
-
-        return f"POST request handled with data: {input_value}", 200
-    
-    
-
-@Router.route('/about', methods=['GET'])
-def about(request):
-    # Fetch data from the database
-    data = db.fetch_data()
-    return f"About page. Data from the database: {data}", 200
-
-
-
+    func = globals().get(func_name)
+    if callable(func) and hasattr(func, "route_path"):
+        wrapper_func = generate_route_wrapper(func)
+        setattr(globals(), func_name + "_wrapper", wrapper_func)
 
 if __name__ == '__main__':
     MyFrameworkServer.run()
