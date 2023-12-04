@@ -2,15 +2,29 @@ from PAW.server import MyFrameworkServer
 from PAW.router import Router
 from urllib.parse import parse_qs
 from PAW.utils import Utils
+from PAW.database.model import Model
 
-from PAW.database import Database
 
-# Create a database instance
-db = Database()
+import jinja2
+template_env = jinja2.Environment(loader=jinja2.FileSystemLoader('templates'))
+
+
+db = Model()
+class Template:
+    def render_template(self, template_name, **kwargs):
+            template = template_env.get_template(template_name)
+            return template.render(**kwargs)
+
+
+# Instantiate the Template class
+template = Template()
+        
 @Router.route('/', methods=['GET', 'POST'])
 def home(request):
     if request.command == 'GET':
-        html_content = Utils.read_html_file('temp/home.html')
+        
+        # Render the HTML template using Jinja2
+        html_content = template.render_template('home.html')
         return html_content, 200
     elif request.command == 'POST':
         content_length = int(request.headers['Content-Length'])
@@ -18,23 +32,38 @@ def home(request):
 
         # Parse form data
         form_data = parse_qs(post_data)
-        input_value = form_data.get('input_name', [''])[0]
-        
-        # Insert data into the database
-        db.insert_data(input_value)
+        admin_name = form_data.get('admin_name', [''])[0]
+        department = form_data.get('department', [''])[0]
 
-        return f"POST request handled with data: {input_value}", 200
-    
+        # Insert data into the database
+        table_name = 'teachers'  # Change this to the desired table name
+        db.insert_data(table_name, admin_name=admin_name, department=department)
+
+        # Render the HTML template using Jinja2 with dynamic content
+        html_content = template.render_template('home.html', dynamic_content=f"Hello, World! {admin_name}, {department}")
+        
+        return html_content, 200
     
 
 @Router.route('/about', methods=['GET'])
 def about(request):
     # Fetch data from the database
-    data = db.fetch_data()
-    return f"About page. Data from the database: {data}", 200
+    table_name = 'teachers'  # Change this to the desired table name
+    data = db.fetch_data(table_name)
+
+    # Render the HTML template using Jinja2 with dynamic content
+    html_content = template.render_template('about.html', dynamic_content=f"Data from the database: {data}")
+
+    return html_content, 200
 
 
 
 
 if __name__ == '__main__':
     MyFrameworkServer.run()
+
+
+
+# # Parse form data
+# form_data = parse_qs(post_data)
+# input_value = form_data.get('input_name', [''])[0]
