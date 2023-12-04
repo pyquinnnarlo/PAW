@@ -1,7 +1,9 @@
+![Asset 6hdpi](https://github.com/pyquinnnarlo/PAW/assets/105549100/fb38796c-be47-493e-8315-242e8b69431d)
 # PAW Framework
-![Asset 6xxxhdpi](https://github.com/pyquinnnarlo/PAW/assets/105549100/503bd923-b3a2-4cf3-bf86-796c13ed4d61)
+
 
 PAW (Python Application Web) is a lightweight web framework written in Python. It provides a simple and flexible structure for building web applications.
+
 
 ## Features
 
