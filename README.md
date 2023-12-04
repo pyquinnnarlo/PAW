@@ -5,7 +5,7 @@
 
 <script type="text/javascript" src="https://cdnjs.buymeacoffee.com/1.0.0/button.prod.min.js" data-name="bmc-button" data-slug="teachmentor" data-color="#5F7FFF" data-emoji="🍕"  data-font="Arial" data-text="Buy me a pizza" data-outline-color="#000000" data-font-color="#ffffff" data-coffee-color="#FFDD00" ></script>
 
-<iframe src="https://giphy.com/embed/513lZvPf6khjIQFibF" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/buymeacoffee-buy-me-a-coffee-support-513lZvPf6khjIQFibF">via GIPHY</a></p>
+[<iframe src="https://giphy.com/embed/513lZvPf6khjIQFibF" width="480" height="480" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/buymeacoffee-buy-me-a-coffee-support-513lZvPf6khjIQFibF">via GIPHY</a></p>](https://media.giphy.com/media/513lZvPf6khjIQFibF/giphy.gif)
 
 </div>
 
