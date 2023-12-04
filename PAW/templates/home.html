@@ -1,40 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../static/test.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="../static/test.css" />
     <title>PAW Test Page</title>
-</head>
-<body>
-
+  </head>
+  <body>
     <div>
-        <h1>Build and Deploy</h1>
+      <h1>Build and Deploy</h1>
     </div>
     <!-- Link to Github -->
     <div class="g">
-        <a href="#">Open Source</a>
+      <a href="#">Open Source</a>
     </div>
 
     <!-- Empty Navbar-->
-    <nav class="nav-bar">
-    </nav>
+    <nav class="nav-bar"></nav>
 
     <!-- Welcome text section -->
     <section id="" class="welcome-display">
-            <h1>Welcome to the Home Page</h1>
-            <form action="/" method="POST">
-                <label for="admin_name">Admin Name:</label>
-                <input type="text" id="admin_name" name="admin_name" required>
-                <br>
-                <label for="department">Department:</label>
-                <input type="text" id="department" name="department" required>
-                <br>
-                <input type="submit" value="Submit">
-            </form>
-            <p>{{ dynamic_content }}</p>
+      <h1>Welcome to the Home Page</h1>
+      <form action="/" method="POST">
+        <label for="admin_name">Admin Name:</label>
+        <input type="text" id="admin_name" name="admin_name" required />
+        <br />
+        <label for="department">Department:</label>
+        <input type="text" id="department" name="department" required />
+        <br />
+        <br />
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <br />
+        <input type="submit" value="Submit" />
+      </form>
+      <p>{{ dynamic_content }}</p>
     </section>
-     
-
-</body>
+  </body>
 </html>

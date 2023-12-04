@@ -26,3 +26,4 @@ class Router:
         response = "404 Not Found"
         status_code = 404
         return response, status_code
+    
