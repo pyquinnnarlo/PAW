@@ -6,7 +6,10 @@ from email.mime.text import MIMEText
 import os
 import re
 from dotenv import load_dotenv
+import time
+import jwt
 
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 class BaseDatabase:
     def __init__(self, client, db_name):
@@ -251,6 +254,41 @@ class Model(BaseDatabase):
             return {"success": False, "message": "Email already exists. Choose a different email."}
 
 
+    def generate_token(self, data):
+        # Generate a token with the provided data
+        token = jwt.encode(data, SECRET_KEY, algorithm='HS256')
+        return token.decode('utf-8')
+
+    def verify_token(self, token):
+        try:
+            # Verify the token and get the payload
+            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            return payload
+        except jwt.ExpiredSignatureError:
+            # Token has expired
+            return {"error": "Token has expired"}
+        except jwt.InvalidTokenError:
+            # Invalid token
+            return {"error": "Invalid token"}
+
+    def generate_auth_token(self, user_id):
+            # Assuming you have a method to generate authentication tokens
+            # Include an expiration time, e.g., as a timestamp
+            expiration_time = int(time.time()) + 3600  # Set to expire in 1 hour
+            token_data = {"user_id": user_id, "exp": expiration_time}
+
+            # Generate and return the token
+            return self.generate_token(token_data)
+
+    def verify_auth_token(self, token):
+        # Assuming you have a method to verify authentication tokens
+        token_data = self.verify_token(token)
+
+        # Check if the token is expired
+        if token_data.get("exp", 0) < int(time.time()):
+            return None  # Token is expired
+        else:
+            return token_data.get("user_id")
 
     def login_user(self, username, password):
         # Check if the user exists
@@ -277,3 +315,8 @@ class Model(BaseDatabase):
         """
 
 
+    def logout_user(self, token):
+        # Implement token invalidation logic if needed
+        # This could involve deleting the token from the client-side
+        # or setting it to an expired state on the server side
+        pass
