@@ -18,5 +18,6 @@ class Template:
     def parser(self, data):
         return parse_qs(data)
     
+    
 
 

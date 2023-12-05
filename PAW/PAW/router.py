@@ -1,4 +1,6 @@
 # router.py
+import re
+
 class Router:
     routes_get = {}
     routes_post = {}
@@ -15,15 +17,30 @@ class Router:
 
     @classmethod
     def get_handler(cls, path):
-        return cls.routes_get.get(path, cls.default_handler)
+        for route, handler in cls.routes_get.items():
+            if cls.match_path(route, path):
+                return handler
+        return cls.default_handler
 
     @classmethod
     def post_handler(cls, path):
-        return cls.routes_post.get(path, cls.default_handler)
+        for route, handler in cls.routes_post.items():
+            if cls.match_path(route, path):
+                return handler
+        return cls.default_handler
 
     @staticmethod
     def default_handler(*args, **kwargs):
         response = "404 Not Found"
         status_code = 404
         return response, status_code
-    
+
+    @staticmethod
+    def match_path(route, path):
+        # Convert route with parameters to a regex pattern
+        pattern = re.sub(r'{[^}]+}', r'([^/]+)', route)
+        pattern = f'^{pattern}$'
+
+        # Check if the path matches the pattern
+        match = re.match(pattern, path)
+        return bool(match)

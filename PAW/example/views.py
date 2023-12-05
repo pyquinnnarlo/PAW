@@ -8,10 +8,10 @@ template = Template()
 @Router.route('/', methods=['GET', 'POST'])
 def home(request):
     if request.command == 'GET':
-        
         # Render the HTML template using Jinja2
         html_content = template.render_template('home.html')
         return html_content, 200
+    
     elif request.command == 'POST':
         content_length = int(request.headers['Content-Length'])
         post_data = request.rfile.read(content_length).decode('utf-8')
@@ -20,11 +20,10 @@ def home(request):
         form_data = template.parser(post_data)
         admin_name = form_data.get('admin_name', [''])[0]
         department = form_data.get('department', [''])[0]
-        password = form_data.get('password', [''])[0]
 
         # Insert data into the database
         table_name = 'students'  # Change this to the desired table name
-        db.insert_data(table_name, admin_name=admin_name, department=department, password=password)
+        db.insert_data(table_name, admin_name=admin_name, department=department)
         # Render the HTML template using Jinja2 with dynamic content
         html_content = template.render_template('home.html', dynamic_content=f"Hello, World! {admin_name}, {department}")
         
@@ -104,3 +103,15 @@ def dashboard(request):
     html_content = template.render_template('about.html', dynamic_content=f"Data from the database: {data}")
 
     return html_content, 200
+
+
+
+# @Router.route('/users/{user_id}', methods=['GET'])
+# def get_user(request, user_id):
+#     # Handle GET request for a specific user
+#     return f"Getting user with ID: {user_id}", 200
+
+# @Router.route('/posts/{post_id}', methods=['GET'])
+# def get_post(request, post_id):
+#     # Handle GET request for a specific post
+#     return f"Getting post with ID: {post_id}", 200
