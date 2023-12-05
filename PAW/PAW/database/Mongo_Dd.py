@@ -4,8 +4,12 @@ import bcrypt
 import smtplib
 from email.mime.text import MIMEText
 import os
+import re
 from dotenv import load_dotenv
+import time
+import jwt
 
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 class BaseDatabase:
     def __init__(self, client, db_name):
@@ -159,6 +163,24 @@ class BaseDatabase:
         """
 
 
+    def drop_collection(self, collection_name):
+        collection = self.db[collection_name]
+        result = collection.drop()
+
+        # Process the result
+        if result:
+            return(f"{result} {collection_name}")
+        else:
+            print(f"Failed to drop collection '{collection_name}'.")
+
+        """
+        # Example usage
+        # Assuming you have an instance of your class named `db_instance`
+        # and you want to drop the collection "your_collection_name"
+
+        db_instance.drop_collection("your_collection_name")
+        """
+
     
     
         
@@ -169,6 +191,16 @@ class Model(BaseDatabase):
         # Load environment variables from .env file
         load_dotenv()
         super().__init__(client, db_name)
+        
+    def is_valid_email(self, email):
+        # Use a simple regular expression for basic email format validation
+        email_pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        return bool(re.match(email_pattern, email))
+    
+    def is_email_unique(self, email):
+        query = {"email": email}
+        existing_user = self.find_one("users", query)
+        return existing_user is None
 
     def hash_password(self, password):
         # Use bcrypt for password hashing
@@ -196,22 +228,95 @@ class Model(BaseDatabase):
 
     def register_user(self, username, email, password):
         # Additional logic for MongoDB registration
-        data = {
-            "username": username,
-            "email": email,
-            "password": self.hash_password(password),
-        }
-        collection_name = 'users'
-        self.insert_data(collection_name, data)
+        if not self.is_valid_email(email):
+            return {"success": False, "message": "Invalid email format"}
+        
+        if len(password) < 8:
+            return {"success": False, "message": "Password should be at least 8 characters"}
+        
+        # Check if the email is already registered
+        if self.is_email_unique(email):
+            data = {
+                "username": username,
+                "email": email,
+                "password": self.hash_password(password),
+            }
+            collection_name = 'users'
+            self.insert_data(collection_name, data)
 
-        # Send a registration confirmation email
-        subject = "Welcome to Your App"
-        message = f"Dear {username},\n\nThank you for registering with Your App!"
-        self.send_email(email, subject, message)
+            # Send a registration confirmation email
+            subject = "Welcome to Your App"
+            message = f"Dear {username},\n\nThank you for registering with Your App!"
+            self.send_email(email, subject, message)
 
-        return {"success": True, "message": "User registered successfully. Check your email for confirmation."}
+            return {"success": True, "message": "User registered successfully. Check your email for confirmation."}
+        else:
+            return {"success": False, "message": "Email already exists. Choose a different email."}
 
 
+    def generate_token(self, data):
+        # Generate a token with the provided data
+        token = jwt.encode(data, SECRET_KEY, algorithm='HS256')
+        return token.decode('utf-8')
+
+    def verify_token(self, token):
+        try:
+            # Verify the token and get the payload
+            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            return payload
+        except jwt.ExpiredSignatureError:
+            # Token has expired
+            return {"error": "Token has expired"}
+        except jwt.InvalidTokenError:
+            # Invalid token
+            return {"error": "Invalid token"}
+
+    def generate_auth_token(self, user_id):
+            # Assuming you have a method to generate authentication tokens
+            # Include an expiration time, e.g., as a timestamp
+            expiration_time = int(time.time()) + 3600  # Set to expire in 1 hour
+            token_data = {"user_id": user_id, "exp": expiration_time}
+
+            # Generate and return the token
+            return self.generate_token(token_data)
+
+    def verify_auth_token(self, token):
+        # Assuming you have a method to verify authentication tokens
+        token_data = self.verify_token(token)
+
+        # Check if the token is expired
+        if token_data.get("exp", 0) < int(time.time()):
+            return None  # Token is expired
+        else:
+            return token_data.get("user_id")
+
+    def login_user(self, username, password):
+        # Check if the user exists
+        user_query = {"username": username}
+        user_data = self.find_one("users", user_query)
+
+        if user_data:
+            # Verify the password
+            stored_password = user_data.get("password", "")
+            if self.verify_password("users", str(user_data.get("_id")), password):
+                return {"success": True, "message": "Login successful"}
+            else:
+                return {"success": False, "message": "Incorrect password"}
+        else:
+            return {"success": False, "message": "User not found"}
+
+        """
+        # Example usage
+        # Assuming you have an instance of your class named `db_instance`
+        # and you want to log in a user with the provided username and password
+
+        login_result = db_instance.login_user("example_username", "example_password")
+        print(login_result)
+        """
 
 
-
+    def logout_user(self, token):
+        # Implement token invalidation logic if needed
+        # This could involve deleting the token from the client-side
+        # or setting it to an expired state on the server side
+        pass

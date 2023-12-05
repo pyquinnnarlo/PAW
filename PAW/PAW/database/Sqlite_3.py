@@ -3,7 +3,14 @@ import re
 import bcrypt
 import smtplib
 from email.mime.text import MIMEText
+import os
+from dotenv import load_dotenv
+import jwt
+import time
 
+
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 
 class BaseDatabase:
@@ -86,6 +93,8 @@ class BaseDatabase:
 
 class Model(BaseDatabase):
     def __init__(self, db_name='db.sqlite3'):
+        # Load environment variables from .env file
+        load_dotenv()
         super().__init__(sqlite3.connect(db_name))
         self.create_table('schema_versions', id='INTEGER PRIMARY KEY AUTOINCREMENT', column_type='TEXT , schema_version INTEGER')
 
@@ -103,10 +112,10 @@ class Model(BaseDatabase):
         
     def send_email(self, to_email, subject, message):
             # Configure your email server
-            smtp_server = 'smtp.gmail.com'
-            smtp_port = 587
-            smtp_username = 'pyquinnnarlo@gmail.com'
-            smtp_password = 'uqee ifmz okrw vueq'
+            smtp_server = os.getenv('SMTP_SERVER')
+            smtp_port = int(os.getenv('SMTP_PORT'))
+            smtp_username = os.getenv('SMTP_USERNAME')
+            smtp_password = os.getenv('SMTP_PASSWORD')
 
             # Create an email message
             email_message = MIMEText(message)
@@ -140,6 +149,43 @@ class Model(BaseDatabase):
         return {"success": True, "message": "User registered successfully. Check your email for confirmation."}
     
 
+    def generate_token(self, data):
+        # Generate a token with the provided data
+        token = jwt.encode(data, SECRET_KEY, algorithm='HS256')
+        return token.decode('utf-8')
+
+    def verify_token(self, token):
+        try:
+            # Verify the token and get the payload
+            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
+            return payload
+        except jwt.ExpiredSignatureError:
+            # Token has expired
+            return {"error": "Token has expired"}
+        except jwt.InvalidTokenError:
+            # Invalid token
+            return {"error": "Invalid token"}
+
+    def generate_auth_token(self, user_id):
+        # Assuming you have a method to generate authentication tokens
+        # Include an expiration time, e.g., as a timestamp
+        expiration_time = int(time.time()) + 3600  # Set to expire in 1 hour
+        token_data = {"user_id": user_id, "exp": expiration_time}
+
+        # Generate and return the token
+        return self.generate_token(token_data)
+
+    def verify_auth_token(self, token):
+        # Assuming you have a method to verify authentication tokens
+        token_data = self.verify_token(token)
+
+        # Check if the token is expired
+        if token_data.get("exp", 0) < int(time.time()):
+            return None  # Token is expired
+        else:
+            return token_data.get("user_id")
+        
+        
 
     def login_user(self, username, password):
         query = "SELECT * FROM users WHERE username = ?"
@@ -150,12 +196,20 @@ class Model(BaseDatabase):
         if user_data:
             stored_password = user_data[2]  # Assuming password is stored in the third column
             if self.verify_password('users', user_data[0], password):
-                return {"success": True, "message": "Login successful"}
+                # User successfully logged in, generate an authentication token
+                user_id = user_data[0]
+                auth_token = self.generate_auth_token(user_id)
+                return {"success": True, "message": "Login successful", "token": auth_token}
             else:
                 return {"success": False, "message": "Incorrect password"}
         else:
             return {"success": False, "message": "User not found"}
 
+    def logout_user(self, token):
+        # Implement token invalidation logic if needed
+        # This could involve deleting the token from the client-side
+        # or setting it to an expired state on the server side
+        pass
 
     
     
