@@ -73,7 +73,17 @@ Feel free to contribute to PAW! Fork the repository, make your changes, and subm
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-<style>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Card Example</title>
+    <style>
 
     
     body {
@@ -124,10 +134,9 @@ This project is licensed under the MIT License - see the LICENSE file for detail
     
 
 </style>
-
-
-
- <div class="card">
+</head>
+<body>
+  <div class="card">
     <img src="https://placekitten.com/300/200" alt="Card Image">
     <div class="card-content">
       <h2>Card Title</h2>
@@ -135,3 +144,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
       <a href="#" class="button">Read More</a>
     </div>
   </div>
+</body>
+</html>
+
