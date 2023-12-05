@@ -72,3 +72,61 @@ Feel free to contribute to PAW! Fork the repository, make your changes, and subm
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
+
+<style>
+    body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f0f0f0;
+}
+
+.card {
+  max-width: 400px;
+  margin: 50px auto;
+  background-color: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.card img {
+  max-width: 100%;
+  height: auto;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card-content h2 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.card-content p {
+  color: #666;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 15px;
+  background-color: #3498db;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.button:hover {
+  background-color: #2980b9;
+}
+
+</style>
+
+ <div class="card">
+    <img src="https://placekitten.com/300/200" alt="Card Image">
+    <div class="card-content">
+      <h2>Card Title</h2>
+      <p>This is a simple card example with HTML and CSS.</p>
+      <a href="#" class="button">Read More</a>
+    </div>
+  </div>
