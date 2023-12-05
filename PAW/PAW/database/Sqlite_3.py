@@ -1,6 +1,10 @@
 import sqlite3
 import re
 import bcrypt
+import smtplib
+from email.mime.text import MIMEText
+
+
 
 class BaseDatabase:
     def __init__(self, conn):
@@ -51,16 +55,6 @@ class BaseDatabase:
             cursor = self.conn.execute(query)
             return cursor.fetchall()
 
-    def character_field(self, table_name, text, default="", nullable=False):
-        query = f'''
-        CREATE TABLE IF NOT EXISTS {table_name} (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            "{text}" TEXT DEFAULT '{default}'
-        )
-        '''
-        with self.conn:
-            self.conn.execute(query)
-
     def get_schema_version(self, table_name):
         query = f'SELECT schema_version FROM schema_versions WHERE table_name = ?'
         with self.conn:
@@ -106,6 +100,26 @@ class Model(BaseDatabase):
             cursor = self.conn.execute(query, (email,))
             count = cursor.fetchone()[0]
             return count == 0
+        
+    def send_email(self, to_email, subject, message):
+            # Configure your email server
+            smtp_server = 'smtp.gmail.com'
+            smtp_port = 587
+            smtp_username = 'pyquinnnarlo@gmail.com'
+            smtp_password = 'uqee ifmz okrw vueq'
+
+            # Create an email message
+            email_message = MIMEText(message)
+            email_message['Subject'] = subject
+            email_message['From'] = smtp_username
+            email_message['To'] = to_email
+
+            # Connect to the SMTP server and send the email
+            with smtplib.SMTP(smtp_server, smtp_port) as server:
+                server.starttls()
+                server.login(smtp_username, smtp_password)
+                server.sendmail(smtp_username, [to_email], email_message.as_string())
+        
 
     def register_user(self, username, email, password):
         if not self.is_valid_email(email):
@@ -116,7 +130,16 @@ class Model(BaseDatabase):
 
         hashed_password = self.hash_password(password)
         self.insert_data('users', username=username, email=email, password=hashed_password)
-        return {"success": True, "message": "User registered successfully"}
+        
+        # Send a registration confirmation email
+        subject = "Welcome to Your App"
+        message = f"Dear {username},\n\nThank you for registering with Your App!"
+        self.send_email(email, subject, message)
+        
+        
+        return {"success": True, "message": "User registered successfully. Check your email for confirmation."}
+    
+
 
     def login_user(self, username, password):
         query = "SELECT * FROM users WHERE username = ?"
@@ -132,3 +155,8 @@ class Model(BaseDatabase):
                 return {"success": False, "message": "Incorrect password"}
         else:
             return {"success": False, "message": "User not found"}
+
+
+    
+    
+
