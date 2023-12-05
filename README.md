@@ -19,9 +19,14 @@ PAW (Python Application Web) is a lightweight web framework written in Python. I
 
 - **Routing**: Easy-to-use routing for defining endpoints and handling HTTP methods.
 - **Database Integration**: Simple database integration for common operations like insert, delete, and fetch.
+  - Sqlite3
+  - MongoDB
+  
 - **Template Rendering**: Support for rendering HTML templates using Jinja2.
 - **User Authentication**: Basic user registration and login functionality.
 - **Security**: Hashing and password verification for secure user management.
+- **Dynamic URL Routing**
+- **Server Auto-Restart**
 
 ## Getting Started
 
