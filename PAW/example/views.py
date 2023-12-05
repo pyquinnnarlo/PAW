@@ -5,6 +5,7 @@ from .model import db
 
 template = Template()
 
+
 @Router.route('/', methods=['GET', 'POST'])
 def home(request):
     if request.command == 'GET':
@@ -32,7 +33,7 @@ def home(request):
 @Router.route('/about', methods=['GET'])
 def about(request):
     # Fetch data from the database
-    table_name = 'students'  # Change this to the desired table name
+    table_name = 'users'  # Change this to the desired table name
     data = db.fetch_data(table_name)
 
     # Render the HTML template using Jinja2 with dynamic content
@@ -47,6 +48,7 @@ def register(request):
         # Render the HTML template for registration form
         html_content = template.render_template('register_result.html')
         return html_content, 200
+    
     elif request.command == 'POST':
         content_length = int(request.headers['Content-Length'])
         post_data = request.rfile.read(content_length).decode('utf-8')
