@@ -74,6 +74,8 @@ Feel free to contribute to PAW! Fork the repository, make your changes, and subm
 This project is licensed under the MIT License - see the LICENSE file for details.
 
 <style>
+
+    
     body {
   font-family: 'Arial', sans-serif;
   margin: 0;
@@ -119,8 +121,11 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 .button:hover {
   background-color: #2980b9;
 }
+    
 
 </style>
+
+
 
  <div class="card">
     <img src="https://placekitten.com/300/200" alt="Card Image">
