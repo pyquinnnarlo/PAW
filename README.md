@@ -75,23 +75,3 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 
 
-
-
- <div style="max-width: 400px; margin: 50px auto; background-color: #fff; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden; transition: transform 0.3s ease-in-out;">
-
-<img src="https://placekitten.com/300/200" alt="Card Image" style="width: 100%; height: auto; border-bottom: 1px solid #ddd;">
-
-<div style="padding: 20px;">
-
-<h2 style="font-size: 1.8rem; margin-bottom: 10px; color: #333;">Beautiful Card</h2>
-
-<p style="color: #555; line-height: 1.4;">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eget justo ut odio facilisis elementum.</p>
-
-<a href="#" style="display: inline-block; padding: 10px 15px; background-color: #3498db; color: #fff; text-decoration: none; border-radius: 4px; transition: background-color 0.3s;" onmouseover="this.style.backgroundColor='#2980b9'" onmouseout="this.style.backgroundColor='#3498db'">Read More</a>
-
-    </div>
-  </div>
-
-
-
-
