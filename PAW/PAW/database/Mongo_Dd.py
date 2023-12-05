@@ -4,6 +4,7 @@ import bcrypt
 import smtplib
 from email.mime.text import MIMEText
 import os
+import re
 from dotenv import load_dotenv
 
 
@@ -159,6 +160,24 @@ class BaseDatabase:
         """
 
 
+    def drop_collection(self, collection_name):
+        collection = self.db[collection_name]
+        result = collection.drop()
+
+        # Process the result
+        if result:
+            return(f"{result} {collection_name}")
+        else:
+            print(f"Failed to drop collection '{collection_name}'.")
+
+        """
+        # Example usage
+        # Assuming you have an instance of your class named `db_instance`
+        # and you want to drop the collection "your_collection_name"
+
+        db_instance.drop_collection("your_collection_name")
+        """
+
     
     
         
@@ -169,6 +188,16 @@ class Model(BaseDatabase):
         # Load environment variables from .env file
         load_dotenv()
         super().__init__(client, db_name)
+        
+    def is_valid_email(self, email):
+        # Use a simple regular expression for basic email format validation
+        email_pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        return bool(re.match(email_pattern, email))
+    
+    def is_email_unique(self, email):
+        query = {"email": email}
+        existing_user = self.find_one("users", query)
+        return existing_user is None
 
     def hash_password(self, password):
         # Use bcrypt for password hashing
@@ -196,22 +225,55 @@ class Model(BaseDatabase):
 
     def register_user(self, username, email, password):
         # Additional logic for MongoDB registration
-        data = {
-            "username": username,
-            "email": email,
-            "password": self.hash_password(password),
-        }
-        collection_name = 'users'
-        self.insert_data(collection_name, data)
+        if not self.is_valid_email(email):
+            return {"success": False, "message": "Invalid email format"}
+        
+        if len(password) < 8:
+            return {"success": False, "message": "Password should be at least 8 characters"}
+        
+        # Check if the email is already registered
+        if self.is_email_unique(email):
+            data = {
+                "username": username,
+                "email": email,
+                "password": self.hash_password(password),
+            }
+            collection_name = 'users'
+            self.insert_data(collection_name, data)
 
-        # Send a registration confirmation email
-        subject = "Welcome to Your App"
-        message = f"Dear {username},\n\nThank you for registering with Your App!"
-        self.send_email(email, subject, message)
+            # Send a registration confirmation email
+            subject = "Welcome to Your App"
+            message = f"Dear {username},\n\nThank you for registering with Your App!"
+            self.send_email(email, subject, message)
 
-        return {"success": True, "message": "User registered successfully. Check your email for confirmation."}
+            return {"success": True, "message": "User registered successfully. Check your email for confirmation."}
+        else:
+            return {"success": False, "message": "Email already exists. Choose a different email."}
 
 
 
+    def login_user(self, username, password):
+        # Check if the user exists
+        user_query = {"username": username}
+        user_data = self.find_one("users", user_query)
+
+        if user_data:
+            # Verify the password
+            stored_password = user_data.get("password", "")
+            if self.verify_password("users", str(user_data.get("_id")), password):
+                return {"success": True, "message": "Login successful"}
+            else:
+                return {"success": False, "message": "Incorrect password"}
+        else:
+            return {"success": False, "message": "User not found"}
+
+        """
+        # Example usage
+        # Assuming you have an instance of your class named `db_instance`
+        # and you want to log in a user with the provided username and password
+
+        login_result = db_instance.login_user("example_username", "example_password")
+        print(login_result)
+        """
 
 
