@@ -33,7 +33,7 @@ PAW (Python Application Web) is a lightweight web framework written in Python. I
 1. Install PAW:
 
 ```bash
-pip install paw-framework
+pip install PAW
 ```
 
 ```bash
