@@ -5,13 +5,19 @@ from watchdog.events import FileSystemEventHandler
 import subprocess
 import threading
 import mimetypes
+from http import cookies
 
 from PAW.router import Router
 
 STATIC_DIR = Path("static")
 
-class MyFrameworkHandler(BaseHTTPRequestHandler):
+class PAWHandler(BaseHTTPRequestHandler):
+    def __init__(self, *args, **kwargs):
+        self.session_data = {}  # Add this line to define session_data
+        super().__init__(*args, **kwargs)
     def do_GET(self):
+        # Parse cookies from the request headers
+        cookie = cookies.SimpleCookie(self.headers.get('Cookie'))
         if self.path.startswith('/static/'):
             self.serve_static()
         else:
@@ -65,7 +71,7 @@ class MyFrameworkHandler(BaseHTTPRequestHandler):
         self.send_error(500, 'Internal Server Error')
         print(f"Error: {e}")
 
-class MyFileSystemEventHandler(FileSystemEventHandler):
+class PAWFileSystemEventHandler(FileSystemEventHandler):
     def on_modified(self, event):
         # Restart server on code modification
         if event.is_directory or not event.src_path.endswith(".py"):
@@ -74,15 +80,15 @@ class MyFileSystemEventHandler(FileSystemEventHandler):
         print("Code modified. Restarting server...")
         subprocess.run(["python", "main.py"])
 
-class MyFrameworkServer:
+class PAWFrameworkServer:
     @staticmethod
     def run(port=8000):
         server_address = ('', port)
-        with HTTPServer(server_address, MyFrameworkHandler) as httpd:
+        with HTTPServer(server_address, PAWHandler) as httpd:
             print(f'Starting MyFramework server on port {port}')
 
             # Set up file system event handler for code modification
-            event_handler = MyFileSystemEventHandler()
+            event_handler = PAWFileSystemEventHandler()
             observer = Observer()
             observer.schedule(event_handler, path=".", recursive=True)
             observer.start()
