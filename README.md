@@ -79,7 +79,7 @@ python main.py
 
 ```bash
 
-git clone <project url>
+git clone https://github.com/pyquinnnarlo/PAW.git
 
 ```
 
@@ -89,7 +89,7 @@ git clone <project url>
 
 ```bash
 
-cd <project dir>
+cd PAW
 
 ```
 
