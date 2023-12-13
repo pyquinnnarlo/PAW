@@ -120,38 +120,6 @@ localhost:8000
 <br />
 <br />
 
-<section>
-<h1>
-    What is PAW 😊
-</h1>
-<p>
-    Python Always Win (PAW), is a full-stack Web Framework built on the Python programming language.
-</p>
-
-<p>
-    The PAW framework is a modern web framwork that simplifies building web applications using Python.
-    The PAW web framework comes with it's own custom styling which can be full customize.
-    <br />
-    Currently, The PAW web framework is built with two database which are very easy to use. 
-</p>
-
-<h3>
-Features
-</h3>
-
-    -- Janji Templating
-    -- Relational and Non-Relational Databases (Sqlite3, MongoDB)
-    -- Routing (POST, GET)
-    -- Custom Styling
-    -- Web Templates (Email Templates, Websites Templates)
-    -- User Authentication
-
-<p>
-    PAW also provide methods and functions to speed up your development process.
-<p>
-
-</section>
-
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.
