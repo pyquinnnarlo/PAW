@@ -18,7 +18,7 @@ Returns:
 
 
 
-from PAW.server import MyFrameworkServer
+from PAW.server import PAWFrameworkServer
 from example.views import *
 
 # Define a decorator for generating route wrapper functions
@@ -38,4 +38,4 @@ for func_name in dir():
         setattr(globals(), func_name + "_wrapper", wrapper_func)
 
 if __name__ == '__main__':
-    MyFrameworkServer.run()
+    PAWFrameworkServer.run()

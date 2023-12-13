@@ -18,6 +18,7 @@ class Router:
     @classmethod
     def get_handler(cls, path):
         for route, handler in cls.routes_get.items():
+            print(f"Checking route: {route} for path: {path}")
             if cls.match_path(route, path):
                 return handler
         return cls.default_handler
@@ -44,3 +45,7 @@ class Router:
         # Check if the path matches the pattern
         match = re.match(pattern, path)
         return bool(match)
+
+
+
+

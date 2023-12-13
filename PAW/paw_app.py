@@ -1,5 +1,4 @@
 import os
-import shutil
 
 def create_app(app_name):
     app_path = os.path.join(os.getcwd(), app_name)
@@ -427,7 +426,7 @@ class Template:
 
 
 # -----------------------------------------------------------------------------------------------------|
-    'templates/index.html': 
+    'templates/app.html': 
 """
 <!DOCTYPE html>
 <html lang="en">
@@ -451,7 +450,7 @@ class Template:
 
     <!-- Welcome text section -->
     <section id="" class="welcome-display">
-      <h1>Welcome to the Home Page</h1>
+      <h1>Welcome to the app Page</h1>
       <form action="/" method="POST">
         <label for="admin_name">Admin Name:</label>
         <input type="text" id="admin_name" name="admin_name" required />
@@ -580,7 +579,7 @@ if __name__ == "__main__":
     import sys
 
     if len(sys.argv) != 2:
-        print("Usage: python create_app.py <app_name>")
+        print("Usage: python paw_app.py <app_name>")
         sys.exit(1)
 
     app_name = sys.argv[1]

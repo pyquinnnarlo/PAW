@@ -1,0 +1,196 @@
+/**
+    Developed by: PAW
+*/
+body {
+  margin: 0;
+  padding: 0;
+  --paw-transparent: transparent;
+  --paw-black: rgb(11, 11, 11);
+  --paw-h-text: #333333;
+  --paw-text: #666666;
+  /** White **/
+  --paw-white: rgb(255 255 255);
+  --paw-slate-50: rgb(248 250 252);
+  --paw-slate-100: rgb(241 245 249);
+  --paw-slate-200: rgb(226 232 240);
+  --paw-slate-300: rgb(203 213 225);
+  --paw-slate-400: rgb(148 163 184);
+  --paw-slate-500: rgb(100 116 139);
+  --paw-slate-600: rgb(71 85 105);
+  --paw-slate-700: rgb(51 65 85);
+  --paw-slate-800: rgb(30 41 59);
+  --paw-slate-900: rgb(15 23 42);
+  --paw-slate-950: rgb(2 6 23);
+  /** Gray **/
+  --paw-gray-50: rgb(249 250 251);
+  --paw-gray-100: rgb(243 244 246);
+  --paw-gray-200: rgb(229 231 235);
+  --paw-gray-300: rgb(209 213 219);
+  --paw-gray-400: rgb(156 163 175);
+  --paw-gray-500: rgb(107 114 128);
+  --paw-gray-600: rgb(75 85 99);
+  --paw-gray-700: rgb(55 65 81);
+  --paw-gray-800: rgb(31 41 55);
+  --paw-gray-900: rgb(17 24 39);
+  --paw-gray-950: rgb(3 7 18);
+  /** Zinc **/
+  --paw-zinc-50: rgb(250 250 250);
+  --paw-zinc-100: rgb(244 244 245);
+  --paw-zinc-200: rgb(228 228 231);
+  --paw-zinc-300: rgb(212 212 216);
+  --paw-zinc-400: rgb(161 161 170);
+  --paw-zinc-500: rgb(113 113 122);
+  --paw-zinc-600: rgb(82 82 91);
+  --paw-zinc-700: rgb(63 63 70);
+  --paw-zinc-800: rgb(39 39 42);
+  --paw-zinc-900: rgb(24 24 27);
+  --paw-zinc-950: rgb(9 9 11);
+  /** Neutral **/
+  --paw-neutral-50: rgb(250 250 250);
+  --paw-neutral-100: rgb(245 245 245);
+  --paw-neutral-200: rgb(229 229 229);
+  --paw-neutral-300: rgb(212 212 212);
+  --paw-neutral-400: rgb(163 163 163);
+  --paw-neutral-500: rgb(115 115 115);
+  --paw-neutral-600: rgb(82 82 82);
+  --paw-neutral-700: rgb(64 64 64);
+  --paw-neutral-800: rgb(38 38 38);
+  --paw-neutral-900: rgb(23 23 23);
+  --paw-neutral-950: rgb(10 10 10);
+  /** Stone **/
+  --paw-stone-50: rgb(250 250 249);
+  --paw-stone-100: rgb(245 245 244);
+  --paw-stone-200: rgb(231 229 228);
+  --paw-stone-300: rgb(214 211 209);
+  --paw-stone-400: rgb(168 162 158);
+  --paw-stone-500: rgb(120 113 108);
+  --paw-stone-600: rgb(87 83 78);
+  --paw-stone-700: rgb(68 64 60);
+  --paw-stone-800: rgb(41 37 36);
+  --paw-stone-900: rgb(28 25 23);
+  --paw-stone-950: rgb(12 10 9);
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--paw-h-text);
+}
+
+h1 {
+  font-weight: bolder;
+  font-size: 4.5em;
+}
+
+h2 {
+  font-weight: bolder;
+  font-size: 3.5em;
+}
+
+h3 {
+  font-weight: bolder;
+  font-size: 2.5em;
+}
+
+h4 {
+  font-weight: bolder;
+  font-size: 1.5em;
+}
+
+p, span {
+  color: var(--paw-text);
+  font-size: 20px;
+}
+
+.paw-background-slate-50 {
+  background-color: var(--paw-slate-50);
+}
+
+.paw-background-slate-100 {
+  background-color: var(--paw-slate-100);
+}
+
+.paw-background-slate-200 {
+  background-color: var(--paw-slate-200);
+}
+
+.paw-background-slate-300 {
+  background-color: var(--paw-slate-300);
+}
+
+.paw-background-slate-400 {
+  background-color: var(--paw-slate-400);
+}
+
+.paw-background-slate-500 {
+  background-color: var(--paw-slate-500);
+}
+
+.paw-background-slate-600 {
+  background-color: var(--paw-slate-600);
+}
+
+.paw-background-slate-700 {
+  background-color: var(--paw-slate-700);
+}
+
+.paw-background-slate-800 {
+  background-color: var(--paw-slate-800);
+}
+
+.paw-background-slate-900 {
+  background-color: var(--paw-slate-900);
+}
+
+.paw-background-slate-950 {
+  background-color: var(--paw-slate-950);
+}
+
+.paw-background-gray-50 {
+  background-color: var(--paw-gray-50);
+}
+
+.paw-background-gray-100 {
+  background-color: var(--paw-gray-100);
+}
+
+.paw-background-gray-200 {
+  background-color: var(--paw-gray-200);
+}
+
+.paw-background-gray-300 {
+  background-color: var(--paw-gray-300);
+}
+
+.paw-background-gray-400 {
+  background-color: var(--paw-gray-400);
+}
+
+.paw-background-gray-500 {
+  background-color: var(--paw-gray-500);
+}
+
+.paw-background-gray-600 {
+  background-color: var(--paw-gray-600);
+}
+
+.paw-background-gray-700 {
+  background-color: var(--paw-gray-700);
+}
+
+.paw-background-gray-800 {
+  background-color: var(--paw-gray-800);
+}
+
+.paw-background-gray-900 {
+  background-color: var(--paw-gray-900);
+}
+
+.paw-background-gray-950 {
+  background-color: var(--paw-gray-950);
+}/*# sourceMappingURL=base.css.map */

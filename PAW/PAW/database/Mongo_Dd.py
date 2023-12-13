@@ -3,11 +3,20 @@ from pymongo import MongoClient
 import bcrypt
 import smtplib
 from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import os
 import re
 from dotenv import load_dotenv
 import time
 import jwt
+from PAW.utils import Template
+from .session_manager import SessionManager
+from pymongo.errors import CollectionInvalid
+
+
+template = Template()
+# Initialize the SessionManager
+session_manager = SessionManager()
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
@@ -16,7 +25,13 @@ class BaseDatabase:
         self.db = client[db_name]
 
     def create_collection(self, collection_name):
-        self.db.create_collection(collection_name)
+        try:
+            # Try to create the collection
+            self.db.create_collection(collection_name)
+            return(f"Collection '{collection_name}' created successfully.")
+        except CollectionInvalid as e:
+            # Handle the case where the collection already exists
+            return(f"Collection '{collection_name}' already exists.")
 
     def insert_data(self, collection_name, data):
         collection = self.db[collection_name]
@@ -62,8 +77,16 @@ class BaseDatabase:
         collection = self.db[collection_name]
         results =  collection.find()
         
-        for result in results:
-            return result
+        # Collect all results in a list
+        if not results:
+            return ("No collection found in database.")
+            
+        all_data = [result for result in results]
+        if len(all_data) == 0:
+            return ("No collection found in database.")
+
+        # Return the list of all data
+        return all_data
 # ------------------------------------------------------------------------------------------------
 
 
@@ -171,7 +194,7 @@ class BaseDatabase:
         if result:
             return(f"{result} {collection_name}")
         else:
-            print(f"Failed to drop collection '{collection_name}'.")
+            return(f"Failed to drop collection '{collection_name}'.")
 
         """
         # Example usage
@@ -198,8 +221,9 @@ class Model(BaseDatabase):
         return bool(re.match(email_pattern, email))
     
     def is_email_unique(self, email):
-        query = {"email": email}
-        existing_user = self.find_one("users", query)
+        collection_name = 'users'
+        # Use case-insensitive query to check for email uniqueness
+        existing_user = self.db[collection_name].find_one({"email": {"$regex": f'^{email}$', "$options": "i"}})
         return existing_user is None
 
     def hash_password(self, password):
@@ -207,7 +231,7 @@ class Model(BaseDatabase):
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         return hashed_password.decode('utf-8')  # Ensure storing the hashed password as text
 
-    def send_email(self, to_email, subject, message):
+    def send_email(self, to_email, subject, message, html_content):
         # Configure your email server
         smtp_server = os.getenv('SMTP_SERVER')
         smtp_port = int(os.getenv('SMTP_PORT'))
@@ -215,18 +239,24 @@ class Model(BaseDatabase):
         smtp_password = os.getenv('SMTP_PASSWORD')
 
         # Create an email message
-        email_message = MIMEText(message)
+        email_message = MIMEMultipart()
+        email_message.attach(MIMEText(message))
+        email_message.attach(MIMEText(html_content, 'html'))
         email_message['Subject'] = subject
         email_message['From'] = smtp_username
         email_message['To'] = to_email
 
         # Connect to the SMTP server and send the email
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(smtp_username, smtp_password)
-            server.sendmail(smtp_username, [to_email], email_message.as_string())
-
-    def register_user(self, username, email, password):
+        try:
+            with smtplib.SMTP(smtp_server, smtp_port) as server:
+                server.starttls()
+                server.login(smtp_username, smtp_password)
+                server.sendmail(smtp_username, [to_email], email_message.as_string())
+            return("Email sent successfully!")
+        except Exception as e:
+            return(f"Error: {e}")
+            
+    def register_user(self, request, username, email, password):
         # Additional logic for MongoDB registration
         if not self.is_valid_email(email):
             return {"success": False, "message": "Invalid email format"}
@@ -247,50 +277,21 @@ class Model(BaseDatabase):
             # Send a registration confirmation email
             subject = "Welcome to Your App"
             message = f"Dear {username},\n\nThank you for registering with Your App!"
-            self.send_email(email, subject, message)
+            html_content = template.render_template('email_confrimation.html', username=username)
+            self.send_email(email, subject, message, html_content)
+            
+            # Set user data in the session
+            user_id = self.fetch_data('users', condition_column='username', condition_value=username)[0]['id']
+            request.session_data['user_id'] = user_id
+            request.session_data['username'] = username
 
             return {"success": True, "message": "User registered successfully. Check your email for confirmation."}
         else:
             return {"success": False, "message": "Email already exists. Choose a different email."}
 
 
-    def generate_token(self, data):
-        # Generate a token with the provided data
-        token = jwt.encode(data, SECRET_KEY, algorithm='HS256')
-        return token.decode('utf-8')
 
-    def verify_token(self, token):
-        try:
-            # Verify the token and get the payload
-            payload = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
-            return payload
-        except jwt.ExpiredSignatureError:
-            # Token has expired
-            return {"error": "Token has expired"}
-        except jwt.InvalidTokenError:
-            # Invalid token
-            return {"error": "Invalid token"}
-
-    def generate_auth_token(self, user_id):
-            # Assuming you have a method to generate authentication tokens
-            # Include an expiration time, e.g., as a timestamp
-            expiration_time = int(time.time()) + 3600  # Set to expire in 1 hour
-            token_data = {"user_id": user_id, "exp": expiration_time}
-
-            # Generate and return the token
-            return self.generate_token(token_data)
-
-    def verify_auth_token(self, token):
-        # Assuming you have a method to verify authentication tokens
-        token_data = self.verify_token(token)
-
-        # Check if the token is expired
-        if token_data.get("exp", 0) < int(time.time()):
-            return None  # Token is expired
-        else:
-            return token_data.get("user_id")
-
-    def login_user(self, username, password):
+    def login_user(self, request, username, password):
         # Check if the user exists
         user_query = {"username": username}
         user_data = self.find_one("users", user_query)
@@ -299,6 +300,9 @@ class Model(BaseDatabase):
             # Verify the password
             stored_password = user_data.get("password", "")
             if self.verify_password("users", str(user_data.get("_id")), password):
+                # Set user data in the session
+                request.session_data['user_id'] = str(user_data['_id'])
+                request.session_data['username'] = user_data['username']  # Assuming 'username' is the correct key
                 return {"success": True, "message": "Login successful"}
             else:
                 return {"success": False, "message": "Incorrect password"}
@@ -315,8 +319,44 @@ class Model(BaseDatabase):
         """
 
 
-    def logout_user(self, token):
-        # Implement token invalidation logic if needed
-        # This could involve deleting the token from the client-side
-        # or setting it to an expired state on the server side
-        pass
+    def logout_user(self, request):
+        # Check if the user is authenticated
+        if 'user_id' in request.session_data:
+            # Remove the user's session
+            session_manager.remove_session(request.session_id)
+            return {"success": True, "message": "Logout successful"}
+        else:
+            return {"success": False, "message": "User not authenticated"}
+    
+    
+    # # Example usage
+    # username = "example_user"
+    # password = "example_password"
+
+    # # Example login
+    # login_result = db_instance.login_user(username, password)
+    # if login_result["success"]:
+    #     auth_token = login_result["token"]
+    #     print(f"User logged in. Auth Token: {auth_token}")
+
+    # # Example logout (client-side):
+    # # - Clear or expire the token in your client application
+
+    # # Example logout (server-side, optional):
+    # # - You can call the logout_user method to perform server-side logout
+    # # db_instance.logout_user(auth_token)
+    
+    
+    
+    # Example usage
+    # user_id = 123
+    # token_data = {"user_id": user_id, "exp": int(time.time()) + 3600}  # Expire in 1 hour
+    # token = db_instance.generate_token(token_data)
+    # print(f"Generated Token: {token}")
+
+    # # Example verification
+    # verified_data = db_instance.verify_token(token)
+    # if "error" in verified_data:
+    #     print(f"Token Verification Failed: {verified_data['error']}")
+    # else:
+    #     print(f"Verified Data: {verified_data}")
