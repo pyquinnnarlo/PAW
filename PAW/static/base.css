@@ -72,7 +72,7 @@ body {
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Helvetica Neue', Arial, sans-serif;
   background-color: #f4f4f4;
   margin: 0;
   padding: 0;
@@ -194,3 +194,93 @@ p, span {
 .paw-background-gray-950 {
   background-color: var(--paw-gray-950);
 }/*# sourceMappingURL=base.css.map */
+
+
+
+
+  
+ 
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--paw-h-text);
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Buttons */
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin: 5px;
+  border: 2px solid var(--paw-slate-500);
+  border-radius: 5px;
+  background-color: var(--paw-white);
+  color: var(--paw-slate-500);
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button:hover {
+  background-color: var(--paw-slate-500);
+  color: var(--paw-white);
+}
+
+/* Form elements */
+input[type="text"],
+input[type="password"],
+textarea,
+select {
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid var(--paw-gray-400);
+  border-radius: 5px;
+}
+
+/* Links */
+a {
+  color: var(--paw-slate-700);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--paw-slate-900);
+}
+
+/* Header */
+header {
+  background-color: var(--paw-black);
+  color: var(--paw-white);
+  padding: 10px 0;
+}
+
+/* Footer */
+footer {
+  background-color: var(--paw-gray-900);
+  color: var(--paw-white);
+  padding: 20px 0;
+  text-align: center;
+}
+
+/* Card */
+.card {
+  background-color: var(--paw-white);
+  border: 1px solid var(--paw-gray-300);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+/* Responsive Utilities */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+}
+
+/* Additional Styling */
+/* Add your custom styles here */
