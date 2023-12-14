@@ -67,8 +67,59 @@ python main.py
 ```
 
 
-## Contributing
-Feel free to contribute to PAW! Fork the repository, make your changes, and submit a pull request.
+<section>
+<h1>
+    Contributing 👋
+</h1>
+
+<ul>
+<li>
+    Clone the project.
+</li>
+
+```bash
+
+git clone https://github.com/pyquinnnarlo/PAW.git
+
+```
+
+<li>
+    cd into project directory.
+</li>
+
+```bash
+
+cd PAW
+
+```
+
+<li>
+    Run the framework (PAW).
+</li>
+
+```bash
+
+python main.py
+
+```
+
+<li>
+    Go to localhost 8000
+</li>
+
+```bash
+
+localhost:8000
+
+```
+
+</ul>
+
+</section>
+
+<br />
+<br />
+
 
 ## License
 This project is licensed under the MIT License - see the LICENSE file for details.

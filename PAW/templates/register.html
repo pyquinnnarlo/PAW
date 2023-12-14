@@ -1,0 +1,19 @@
+<!-- templates/home.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+  </head>
+  <body>
+    <h1>Hello, Register!</h1>
+
+    <form method="post" action="/user/">
+      <label for="username">Enter your name:</label>
+      <input type="text" id="username" name="username" required />
+      <input type="password" id="password" name="password" required />
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html>
