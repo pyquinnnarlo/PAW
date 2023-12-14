@@ -2,14 +2,19 @@ cffi==1.16.0
 Jinja2==3.1.2
 peewee==3.17.0
 pymongo==4.6.1
-pytest==7.4.3
+<<<<<<< HEAD
 SQLAlchemy==1.4.50
 sqlparse==0.4.4
 urllib3==2.1.0
-virtualenv==20.24.6
-watchdog==3.0.0
-watchfiles==0.21.0
 WebOb==1.8.7
 websockets==12.0
 Werkzeug==3.0.1
 
+=======
+SQLAlchemy==1.4.50
+sqlparse==0.4.4
+urllib3==2.1.0
+WebOb==1.8.7
+websockets==12.0
+Werkzeug==3.0.1
+>>>>>>> 71a8de7e5edfc0b1d487d4235353d41aa3bee35c
