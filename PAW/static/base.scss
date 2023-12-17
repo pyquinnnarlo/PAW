@@ -77,9 +77,21 @@ body {
     --paw-stone-800: rgb(41 37 36);
     --paw-stone-900: rgb(28 25 23);
     --paw-stone-950: rgb(12 10 9);
+    /** Blue **/
+    --paw-blue-50: rgb(227, 242, 253);
+    --paw-blue-100: rgb(187, 222, 251);
+    --paw-blue-200: rgb(129, 194, 241);
+    --paw-blue-300: rgb(79, 168, 235);
+    --paw-blue-400: rgb(41, 146, 229);
+    --paw-blue-500: rgb(3, 122, 219);
+    --paw-blue-600: rgb(2, 99, 180);
+    --paw-blue-700: rgb(2, 81, 146);
+    --paw-blue-800: rgb(2, 60, 110);
+    --paw-blue-900: rgb(1, 42, 80);
+    --paw-blue-950: rgb(1, 24, 46);
+
 
     font-family: Arial, sans-serif;
-    background-color: #db0606;
 }
 
 
@@ -184,4 +196,37 @@ p, span {
 }
 .paw-background-gray-950 {
     background-color: var(--paw-gray-950);
+}
+.paw-color-blue-50 {
+    color: var(--paw-blue-950);
+}
+.paw-color-blue-100 {
+    color: var(--paw-blue-950);
+}
+.paw-color-blue-200 {
+    color: var(--paw-blue-200);
+}
+.paw-color-blue-300 {
+    color: var(--paw-blue-300);
+}
+.paw-color-blue-400 {
+    color: var(--paw-blue-400);
+}
+.paw-color-blue-500 {
+    color: var(--paw-blue-500);
+}
+.paw-color-blue-600 {
+    color: var(--paw-blue-600);
+}
+.paw-color-blue-700 {
+    color: var(--paw-blue-700);
+}
+.paw-color-blue-800 {
+    color: var(--paw-blue-800);
+}
+.paw-color-blue-900 {
+    color: var(--paw-blue-900);
+}
+.paw-color-blue-950 {
+    color: var(--paw-blue-950);
 }
